@@ -57,6 +57,7 @@ public class ServerThread extends Thread {
                 PrintWriter bfw = Utilities.getWriter(socket);
 
                 String command = bfr.readLine();
+                LogServerMessage("Received command: " + command + "\n");
                 String clientAddress = socket.getInetAddress().getHostName();
                 if(command.startsWith("set")) {
                     bfw.println(handleSetCommand(clientAddress, command));
@@ -72,6 +73,14 @@ public class ServerThread extends Thread {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    private void LogServerMessage(String message) {
+        serverLogTextView.post(new Runnable(){
+            public void run() {
+                serverLogTextView.append(message);
+            }
+        });
     }
 
     String handleSetCommand(String clientAddress, String command) {
