@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class ServerFragment extends Fragment {
-    private TextView serverLogTextView;;
+    private ServerThread serverThread;
+    private TextView serverLogTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state) {
@@ -19,6 +20,15 @@ public class ServerFragment extends Fragment {
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
         serverLogTextView = (TextView)getActivity().findViewById(R.id.server_log_text_view);
-        serverLogTextView.append("The server has started\n");
+        serverThread = new ServerThread(serverLogTextView);
+        serverThread.startServer();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (serverThread != null) {
+            serverThread.stopServer();
+        }
+        super.onDestroy();
     }
 }
